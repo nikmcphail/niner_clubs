@@ -9,7 +9,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #171717;
     --foreground: #ededed;
   }
 }
@@ -24,4 +24,25 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.gold-underline {
+  position: relative;
+}
+
+.gold-underline::after {
+  content: '';
+  position: absolute;
+  background: rgb(164 150 101);
+  height: 5px;
+  width: 100%;
+}
+
+.navbar-item {
+  color: white;
+  transition: color 0.5s ease;
+}
+
+.navbar-item:hover {
+  color: rgb(164 150 101);
 }
