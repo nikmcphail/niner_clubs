@@ -6,6 +6,7 @@
   --background: #ffffff;
   --foreground: #171717;
   --uncc-gold: rgb(164 150 101);
+  --uncc-green: rgb(0 80 53);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -34,7 +35,7 @@ body {
 .gold-underline::after {
   content: '';
   position: absolute;
-  background: rgb(164 150 101);
+  background: var(--uncc-gold);
   height: 5px;
   width: 100%;
 }
@@ -42,12 +43,16 @@ body {
 .navbar-item {
   color: white;
   transition: color 0.5s ease, background-color 0.5s ease;
-  background-color: rgb(164 150 101);
+  background-color: var(--uncc-gold);
   border-radius: 5px;
   padding: 5px 10px;
 }
 
 .navbar-item:hover {
-  color: rgb(164 150 101);
+  color: var(--uncc-gold);
   background-color: white;
+}
+
+.bg-uncc-green {
+  background-color: var(--uncc-green);
 }
