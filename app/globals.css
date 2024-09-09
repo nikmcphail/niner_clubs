@@ -5,6 +5,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --uncc-gold: rgb(164 150 101);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -40,9 +41,13 @@ body {
 
 .navbar-item {
   color: white;
-  transition: color 0.5s ease;
+  transition: color 0.5s ease, background-color 0.5s ease;
+  background-color: rgb(164 150 101);
+  border-radius: 5px;
+  padding: 5px 10px;
 }
 
 .navbar-item:hover {
   color: rgb(164 150 101);
+  background-color: white;
 }
