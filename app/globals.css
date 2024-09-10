@@ -53,13 +53,14 @@ body {
   background-color: white;
 }
 
-.uncc-button {
+.uncc-form-button {
   background-color: var(--uncc-green);
   transition: background-color 0.5s ease, color 0.5s ease;
   border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.uncc-button:hover {
+.uncc-form-button:hover {
   background-color: white;
   color: var(--uncc-green);
 }
@@ -120,7 +121,7 @@ body {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-input {
+.form-input {
   color: black;
   padding: 0px 10px;
   border-radius: 5px;

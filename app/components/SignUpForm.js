@@ -1,3 +1,7 @@
+'use client';
+
+import {motion} from 'framer-motion';
+
 export default function SignUpForm() {
 
     return (
@@ -5,20 +9,20 @@ export default function SignUpForm() {
             <div className="flex flex-col items-center px-5 py-5 space-y-5">
                 <div className="flex flex-col">
                     <label htmlFor="fullname">Full Name</label>
-                    <input type="text" id="fullname" placeholder="John Doe" required />
+                    <input className="form-input" type="text" id="fullname" placeholder="John Doe" required />
                 </div>
 
                 <div className="flex flex-col">
                     <label htmlFor="email">Email (uncc/charlotte.edu)</label>
-                    <input type="email" id="email" pattern="^[a-zA-Z0-9._%+\-]+@(uncc\.edu|charlotte\.edu)$" placeholder="johndoe@charlotte.edu" required />
+                    <input className="form-input" type="email" id="email" pattern="^[a-zA-Z0-9._%+\-]+@(uncc\.edu|charlotte\.edu)$" placeholder="johndoe@charlotte.edu" required />
                 </div>
 
                 <div className="flex flex-col">
                     <label htmlFor="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter password" required />
+                    <input className="form-input" type="password" id="password" placeholder="Enter password" required />
                 </div>
 
-                <button className="uncc-button p-3 text-white font-bold" type="submit">Sign Up</button>
+                <motion.button whileHover={{scale: 1.1, transition:{duration: .2}}} className="uncc-form-button p-3 text-white font-bold" type="submit">Sign Up</motion.button>
             </div>
         </form>
     )
