@@ -3,7 +3,7 @@ import React from 'react'
 
 const UserRegister = () => {
   return (
-    <div>
+    <div className="flex justify-center items-center pt-56">
         <SignUpForm />
     </div>
   )

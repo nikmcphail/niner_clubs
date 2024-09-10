@@ -53,6 +53,17 @@ body {
   background-color: white;
 }
 
+.uncc-button {
+  background-color: var(--uncc-green);
+  transition: background-color 0.5s ease, color 0.5s ease;
+  border-radius: 5px;
+}
+
+.uncc-button:hover {
+  background-color: white;
+  color: var(--uncc-green);
+}
+
 .bg-uncc-green {
   background-color: var(--uncc-green);
 }
@@ -101,4 +112,9 @@ body {
     rgba(16, 34, 23, 1) 100% 
   );
   z-index: 3; 
+}
+
+.form-background {
+  background: var(--uncc-gold);
+  border-radius: 5px;
 }
