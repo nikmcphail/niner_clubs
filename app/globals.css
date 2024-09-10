@@ -56,3 +56,49 @@ body {
 .bg-uncc-green {
   background-color: var(--uncc-green);
 }
+
+.scrolling-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #1c3c29; 
+}
+
+.scrolling-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 200%; 
+  height: 110%;
+  flex-wrap: wrap;
+}
+
+.logo-pattern {
+  flex: 0 0 8vw; 
+  height: 13.6vw;
+  object-fit: contain;
+  opacity: .3;
+}
+
+.fade-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(16, 34, 23, 1) 0%, 
+    rgba(16, 34, 23, 0) 20%, 
+    rgba(16, 34, 23, 0) 80%, 
+    rgba(16, 34, 23, 1) 100% 
+  );
+  z-index: 3; 
+}

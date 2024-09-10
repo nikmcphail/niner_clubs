@@ -1,5 +1,6 @@
-
+import logo from '@/app/public/images/logo.png'; 
 import Link from 'next/link';
+import Image from 'next/image';
 
 /*
  * @TODO: Show/hide certain elements depending on if user is logged in or not.
@@ -7,11 +8,16 @@ import Link from 'next/link';
 
 const Navbar = () => {
     return (
-        <div className="w-full h-14 bg-uncc-green sticky top-0 gold-underline">
-            <div className="container mx-auto px-4 h-full">
+        <div className="w-full h-20 bg-uncc-green sticky top-0 gold-underline">
+            <div className="container px-4 h-full">
                 <div className="flex justify-between items-center h-full">
                     <div className="flex justify-start">
-                        <p>Put Logo Here</p>
+                    <Image
+                        src={logo}
+                        alt={`Logo`}
+                        width={100} // Set the appropriate width
+                        height={100} // Set the appropriate height
+                    />
                     </div>
                     <div className="flex justify-end">
                         <ul className="hidden md:flex gap-x-6">

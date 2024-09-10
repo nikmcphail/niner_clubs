@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import Navbar from "./components/Navbar";
 import "./globals.css";
+import ScrollingBackground from "./components/ScrollingBackground";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
+        <ScrollingBackground />
         {children}
       </body>
     </html>
