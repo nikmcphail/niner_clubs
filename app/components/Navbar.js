@@ -9,17 +9,17 @@ import Image from 'next/image';
 const Navbar = () => {
     return (
         <div className="w-full h-20 bg-uncc-green sticky top-0 gold-underline">
-            <div className="container px-4 h-full">
-                <div className="flex justify-between items-center h-full">
+            <div className="container mx-auto px-4 h-full">
+                <div className="flex justify-between items-center h-full relative">
                     <div className="flex justify-start">
-                    <Image
-                        src={logo}
-                        alt={`Logo`}
-                        width={100} // Set the appropriate width
-                        height={100} // Set the appropriate height
-                    />
+                        <Image
+                            src={logo}
+                            alt={`Logo`}
+                            width={100} // Set the appropriate width
+                            height={100} // Set the appropriate height
+                        />
                     </div>
-                    <div className="flex justify-end">
+                    <div className="absolute left-1/2 transform -translate-x-1/2">
                         <ul className="hidden md:flex gap-x-6">
                             <li>
                                 <Link href="/">

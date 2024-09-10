@@ -18,7 +18,7 @@ export default function SignUpForm() {
                     <input type="password" id="password" placeholder="Enter password" required />
                 </div>
 
-                <button className="uncc-button p-3 text-white font-bold" type="submit">Create User</button>
+                <button className="uncc-button p-3 text-white font-bold" type="submit">Sign Up</button>
             </div>
         </form>
     )
