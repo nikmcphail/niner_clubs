@@ -117,4 +117,12 @@ body {
 .form-background {
   background: var(--uncc-gold);
   border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+input {
+  color: black;
+  padding: 0px 10px;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }

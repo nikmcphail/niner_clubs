@@ -1,6 +1,9 @@
+'use client';
+
 import logo from '@/app/public/images/logo.png'; 
 import Link from 'next/link';
 import Image from 'next/image';
+import {motion} from 'framer-motion';
 
 /*
  * @TODO: Show/hide certain elements depending on if user is logged in or not.
@@ -23,37 +26,37 @@ const Navbar = () => {
                         <ul className="hidden md:flex gap-x-6">
                             <li>
                                 <Link href="/">
-                                    <p className="navbar-item">Home</p>
+                                    <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Home</motion.p>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/">
-                                    <p className="navbar-item">Browse Clubs</p>
+                                    <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Browse Clubs</motion.p>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/">
-                                    <p className="navbar-item">Register Club</p>
+                                    <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Register Club</motion.p>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/user/profile">
-                                    <p className="navbar-item">Profile</p>
+                                    <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Profile</motion.p>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/user/register">
-                                    <p className="navbar-item">Register</p>
+                                    <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Register</motion.p>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/user/login">
-                                    <p className="navbar-item">Sign In</p>
+                                    <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Sign In</motion.p>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/">
-                                    <p className="navbar-item">Sign Out</p>
+                                    <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Sign Out</motion.p>
                                 </Link>
                             </li>
                         </ul>
