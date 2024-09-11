@@ -23,7 +23,13 @@ export const register = async(values) => {
         });
 
         const savedUser = await user.save();
-    } catch (error) {
-        console.log(error);
+
+    } catch (err) {
+        if (err.name === 'ValidationError')
+        {
+            return {
+                error: "Password too short."
+            };
+        }
     }
 }
