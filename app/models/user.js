@@ -4,11 +4,17 @@ import {Schema} from 'mongoose';
 
 // Schema for User
 const userSchema = new Schema({
-    fullname: {
+    firstname: {
         type: String,
-        required: [true, 'Full name is required.'],
+        required: [true, 'First name is required.'],
         trim: true,
-        minLength: [5, 'Name must be longer than 5 characters.']
+        minLength: [2, 'First name must be longer than 2 characters.']
+    },
+    lastname: {
+        type: String,
+        required: [true, 'Last name is required.'],
+        trim: true,
+        minLength: [2, 'Last name must be longer than 2 characters.']
     },
     email: {
         type: String,
@@ -25,11 +31,10 @@ const userSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: 'Club',
         default: []
-    },
-    date: {
-        type: Date,
-        default: Date.now
     }
+},
+{
+    timestamps: true
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
