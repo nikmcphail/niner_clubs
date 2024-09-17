@@ -28,7 +28,7 @@ export const register = async(values) => {
         if (err.name === 'ValidationError')
         {
             return {
-                error: "Password too short."
+                error: err.message
             };
         }
     }
