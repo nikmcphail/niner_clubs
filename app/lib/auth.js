@@ -1,6 +1,7 @@
 import { connectDB } from "./mongodb";
 import User from "../models/user";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from 'bcrypt';
 
 export const authOptions = {
   providers: [
@@ -24,8 +25,7 @@ export const authOptions = {
         }
 
         // Compare the provided password with the hashed password stored in the DB
-        // TODO: hash passwords (bcrypt?)
-        const passwordMatch = await (credentials.password === user.password);
+        const passwordMatch = await bcrypt.compare(credentials.password, user.password);
 
         // If the password doesn't match, throw an error
         if (!passwordMatch) {
