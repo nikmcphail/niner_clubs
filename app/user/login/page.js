@@ -46,8 +46,8 @@ export default function Login() {
   return (
     <div className="flex flex-col justify-center items-center pt-56">
     <form onSubmit={handleSubmit} className="form-background font-bold">
-      {error && <div className="text-red-500">{error}</div>}
       <div className="flex flex-col items-center px-5 py-5 space-y-5">
+        {error && <div className="text-red-500">{error}</div>}
         <div className="flex flex-col">
           <label htmlFor="email">Email (uncc/charlotte.edu)</label>
           <input type="email" placeholder="Email" id="email" name="email" className="form-input"/>
