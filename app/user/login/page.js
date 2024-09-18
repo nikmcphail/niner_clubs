@@ -1,13 +1,20 @@
 "use client";
 
-import {FormEvent, useState} from "react";
+import {useState, useEffect} from "react";
 import {signIn} from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function Login() {
   const [error, setError] = useState("");
   const router = useRouter();
+  const {data: session, status} = useSession();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/');
+    }
+  }, [status, router])
 
   const handleSubmit = async(event) => {
     event.preventDefault();
@@ -27,10 +34,18 @@ export default function Login() {
     }
   };
 
+  if (status === 'loading') {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  if (status === 'authenticated') {
+    return null;
+  }
+
   return (
     <div className="flex justify-center items-center pt-56">
     <form onSubmit={handleSubmit} className="form-background font-bold">
-      {error && <div className="text-black">{error}</div>}
+      {error && <div className="text-red-500">{error}</div>}
       <div className="flex flex-col items-center px-5 py-5 space-y-5">
         <div className="flex flex-col">
           <label htmlFor="email">Email (uncc/charlotte.edu)</label>
