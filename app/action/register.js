@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 
 export const register = async(values) => {
     const {firstname, lastname, email, password} = values;
+    const validationError = {};
 
     try {
         await connectDB();
@@ -14,6 +15,10 @@ export const register = async(values) => {
             return {
                 error: "Account with email already exists."
             };
+        } 
+
+        if (password.length < 10) {
+            validationError.password = "Password must be at least 10 characters.";
         }
 
         const hashedPass = await bcrypt.hash(password, 10);
@@ -27,12 +32,22 @@ export const register = async(values) => {
 
         const savedUser = await user.save();
 
+        if (savedUser) {
+            return {success: true};
+        }
+
     } catch (err) {
         if (err.name === 'ValidationError')
         {
-            return {
-                error: err.message
-            };
+            const errorMessages = {};
+            Object.keys(err.errors).forEach((field) => {
+                errorMessages[field] = err.errors[field].message;
+            });
+
+
+            return {errors: {...validationError, ...errorMessages}};
         }
+
+        return {error: "An unexpected error occured."};
     }
 }
