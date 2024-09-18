@@ -3,6 +3,7 @@ import {useRef, useState, useEffect} from 'react';
 import {useRouter} from "next/navigation";
 import { register } from '@/app/action/register';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function Register() {
   const [errors, setErrors] = useState("");
@@ -45,7 +46,7 @@ export default function Register() {
   }
 
   return (
-    <div className="flex justify-center items-center pt-56">
+    <div className="flex flex-col justify-center items-center pt-56">
       <form ref={ref} action={handleSubmit} className="form-background font-bold">
         <div className="flex flex-col items-center px-5 py-5 space-y-5">
           {errors.general && <div className="text-red-500">{errors.general}</div>}
@@ -76,6 +77,9 @@ export default function Register() {
           <button className="uncc-form-button p-3 text-white font-bold">Sign Up</button>
         </div>
       </form>
+      <div className="pt-4">
+        <Link href='/user/login'>Already have an account?</Link>
+      </div>
     </div>
   )
 }
