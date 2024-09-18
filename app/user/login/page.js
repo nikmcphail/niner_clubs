@@ -11,6 +11,7 @@ export default function Login() {
   const router = useRouter();
   const {data: session, status} = useSession();
 
+  // Check if user is authenticated and redirect to home page.
   useEffect(() => {
     if (status === 'authenticated') {
       router.push('/');
@@ -24,7 +25,7 @@ export default function Login() {
       email: formData.get("email"),
       password: formData.get("password"),
       redirect: false
-    });
+    }); // This sends to lib/auth.js
 
     if (res?.error) {
       setError(res.error);
@@ -35,14 +36,17 @@ export default function Login() {
     }
   };
 
+  // If status of session is loading, display loading...
   if (status === 'loading') {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
+  // If user is authenticated, show nothing on the page.
   if (status === 'authenticated') {
     return null;
   }
 
+  // If user is unauthenticated, allow them to view the login form.
   return (
     <div className="flex flex-col justify-center items-center pt-56">
     <form onSubmit={handleSubmit} className="form-background font-bold">
