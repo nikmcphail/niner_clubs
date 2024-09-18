@@ -4,6 +4,7 @@ import {useState, useEffect} from "react";
 import {signIn} from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Login() {
   const [error, setError] = useState("");
@@ -43,7 +44,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex justify-center items-center pt-56">
+    <div className="flex flex-col justify-center items-center pt-56">
     <form onSubmit={handleSubmit} className="form-background font-bold">
       {error && <div className="text-red-500">{error}</div>}
       <div className="flex flex-col items-center px-5 py-5 space-y-5">
@@ -60,6 +61,9 @@ export default function Login() {
         <button className="uncc-form-button p-3 text-white font-bold">Sign In</button>
       </div>
     </form>
+    <div className="pt-4">
+      <Link href='/user/register'>Don't have an account?</Link>
+    </div>
     </div>
   );
 }
