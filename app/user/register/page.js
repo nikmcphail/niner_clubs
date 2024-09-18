@@ -1,13 +1,20 @@
 "use client";
-import {FormEvent, useRef, useState} from 'react';
+import {useRef, useState, useEffect} from 'react';
 import {useRouter} from "next/navigation";
-import Link from "next/link";
 import { register } from '@/app/action/register';
+import { useSession } from 'next-auth/react';
 
 export default function Register() {
   const [errors, setErrors] = useState("");
   const router = useRouter();
   const ref = useRef(null);
+  const {data: session, status} = useSession();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/');
+    }
+  }, [status, router])
 
   const handleSubmit = async(formData) => {
     const reg = await register({
@@ -28,6 +35,14 @@ export default function Register() {
       return router.push('/user/login');
     }
   };
+
+  if (status === 'loading') {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  if (status === 'authenticated') {
+    return null;
+  }
 
   return (
     <div className="flex justify-center items-center pt-56">
