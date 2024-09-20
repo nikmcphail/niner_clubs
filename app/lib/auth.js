@@ -1,6 +1,7 @@
 import { connectDB } from "./mongodb";
 import User from "../models/user";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from 'bcrypt';
 
 export const authOptions = {
   providers: [
@@ -24,8 +25,7 @@ export const authOptions = {
         }
 
         // Compare the provided password with the hashed password stored in the DB
-        // TODO: hash passwords (bcrypt?)
-        const passwordMatch = await (credentials.password === user.password);
+        const passwordMatch = await bcrypt.compare(credentials.password, user.password);
 
         // If the password doesn't match, throw an error
         if (!passwordMatch) {
@@ -34,7 +34,7 @@ export const authOptions = {
 
         // Return the user object with necessary fields (excluding password)
         return {
-          id: user._id,  // Note: `_id` is returned here as `id`
+          id: user._id,
           firstname: user.firstname,
           lastname: user.lastname,
           email: user.email,
@@ -46,7 +46,7 @@ export const authOptions = {
     strategy: "jwt",  // Use JWT for session strategy
   },
   callbacks: {
-    // Customize JWT to include user ID
+    // Customize JWT to include user ID, firstname and lastname
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -55,7 +55,7 @@ export const authOptions = {
       }
       return token;
     },
-    // Customize session to include the user ID in the session object
+    // Customize session to include the user ID, firstname, and lastname in the session object
     async session({ session, token }) {
       if (token?.id) {
         session.user.id = token.id;
