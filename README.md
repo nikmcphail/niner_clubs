@@ -1,6 +1,16 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Niner Clubs
+
+This is a web server application created to allow users to create and manage interest clubs, as well as announcements within those clubs.
+
 ## Getting Started
+
+First, install the node modules:
+
+```bash
+npm i -y
+```
 
 First, run the development server:
 
