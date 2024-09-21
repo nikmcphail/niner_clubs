@@ -1,36 +1,30 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react'; // Import useSession to get the session data
+import { useSession } from 'next-auth/react';
 
 const ChangePasswordForm = () => {
-  // Use the useSession hook to get session data
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  // Extract the userId from the session, assuming it's included in session.user.id
-  const userId = session?.user?.id;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!userId) {
+    if (!session?.user?.id) {
       setMessage('User is not authenticated.');
       return;
     }
 
-    // Check if new passwords match
     if (newPassword !== confirmPassword) {
       setMessage('New passwords do not match.');
       return;
     }
 
     try {
-      // Send the password change request to the backend with the userId
-      const response = await fetch(`/api/passwordchange?userId=${userId}`, {
+      const response = await fetch(`/api/passwordchange?userId=${session.user.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ currentPassword, newPassword }),
@@ -49,31 +43,40 @@ const ChangePasswordForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="password"
-        placeholder="Current Password"
-        value={currentPassword}
-        onChange={(e) => setCurrentPassword(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="New Password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Confirm New Password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        required
-      />
-      <button type="submit">Change Password</button>
-      {message && <p>{message}</p>}
-    </form>
+    <div className="flex flex-col justify-center items-center pt-56">
+      <form onSubmit={handleSubmit} className="form-background font-bold">
+        <div className="flex flex-col items-center px-5 py-5 space-y-5">
+          <input
+            className="form-input"
+            type="password"
+            placeholder="Current Password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            required
+          />
+          <input
+            className="form-input"
+            type="password"
+            placeholder="New Password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+          <input
+            className="form-input"
+            type="password"
+            placeholder="Confirm New Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <button type="submit" className="uncc-form-button p-3 text-white font-bold">
+            Change Password
+          </button>
+          {message && <p>{message}</p>}
+        </div>
+      </form>
+    </div>
   );
 };
 
