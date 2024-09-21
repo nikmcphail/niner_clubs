@@ -23,7 +23,7 @@
 
 import { connectDB } from "@/app/lib/mongodb"; // Import your database connection utility
 import User from "@/app/models/user"; // Import your User model
-import bcrypt from 'bcryptjs'; // For hashing and comparing passwords
+import bcrypt from 'bcrypt'; // For hashing and comparing passwords
 import { NextResponse } from "next/server"; // For Next.js responses
 
 export async function POST(request) {
