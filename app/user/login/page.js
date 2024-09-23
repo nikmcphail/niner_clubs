@@ -14,7 +14,7 @@ export default function Login() {
   // Check if user is authenticated and redirect to home page.
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/');
+      router.push('/user/profile');
     }
   }, [status, router])
 
@@ -32,7 +32,7 @@ export default function Login() {
     }
 
     if (res?.ok) {
-      return router.push('/');
+      return router.push('/user/profile');
     }
   };
 
