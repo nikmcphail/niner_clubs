@@ -1,5 +1,6 @@
 import { connectDB } from "@/app/lib/mongodb";
 import Club from "@/app/models/club";
+import User from "@/app/models/user";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/lib/auth";
@@ -34,12 +35,16 @@ export async function POST(request, { params }) {
             return NextResponse.json({ message: 'User is not a member of this club' }, { status: 400 });
         }
 
-        // Remove the member
+        // Remove the member from the club
         club.members.splice(memberIndex, 1);
         console.log('Members after removal:', club.members);
 
         await club.save();
         console.log('Club saved successfully');
+
+        // Remove club from user's clubs array
+        await User.findByIdAndUpdate(userId, { $pull: { clubs: clubId } });
+        console.log('User updated successfully');
 
         return NextResponse.json({ message: 'Successfully left the club' }, { status: 200 });
     } catch (error) {

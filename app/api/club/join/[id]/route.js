@@ -1,5 +1,6 @@
 import { connectDB } from "@/app/lib/mongodb";
 import Club from "@/app/models/club";
+import User from "@/app/models/user";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/lib/auth";
@@ -33,7 +34,7 @@ export async function POST(request, { params }) {
             return NextResponse.json({ message: 'User is already a member of this club' }, { status: 400 });
         }
 
-        // Add the new member
+        // Add the new member to the club
         club.members.push({
             userId: new mongoose.Types.ObjectId(userId),
             joinedAt: new Date()
@@ -42,6 +43,10 @@ export async function POST(request, { params }) {
 
         await club.save();
         console.log('Club saved successfully');
+
+        // Add club to user's clubs array
+        await User.findByIdAndUpdate(userId, { $addToSet: { clubs: clubId } });
+        console.log('User updated successfully');
 
         return NextResponse.json({ message: 'Successfully joined the club' }, { status: 200 });
     } catch (error) {

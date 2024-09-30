@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import {Schema} from 'mongoose';
 
-
-// Schema for User
 const userSchema = new Schema({
     firstname: {
         type: String,
@@ -27,13 +25,11 @@ const userSchema = new Schema({
         minLength: [10, 'Password must be at least 10 characters.'],
         required: [true, 'Password is required.']
     },
-    clubs: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Club',
-        default: []
-    }
-},
-{
+    clubs: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Club'
+    }] // This now represents clubs the user is a member of
+}, {
     timestamps: true
 });
 
