@@ -46,7 +46,7 @@ const UserProfile = () => {
 
   // Handler to navigate to the clubs page
   const handleViewClubs = () => {
-    router.push('/clubs'); // Navigates to the clubs page
+    router.push('/user/clubs'); // Navigates to the clubs page
   };
 
   // Show loading state if session or profile data is still being fetched
