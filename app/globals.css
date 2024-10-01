@@ -187,3 +187,6 @@ body {
   transform: translateY(0);
 }
 
+.text-gold {
+  color: var(--uncc-gold);
+}
