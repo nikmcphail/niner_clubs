@@ -31,7 +31,7 @@ const Navbar = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/">
+                                <Link href="/clubs">
                                     <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Browse Clubs</motion.p>
                                 </Link>
                             </li>
@@ -65,7 +65,7 @@ const Navbar = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/">
+                                <Link href="/clubs">
                                     <motion.p whileHover={{scale: 1.1, transition:{duration: .2}}} className="navbar-item">Browse Clubs</motion.p>
                                 </Link>
                             </li>
