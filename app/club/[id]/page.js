@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import ScrollingBackground from '@/app/components/ScrollingBackground';
 import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const ClubPage = ({ params }) => {
     // Extract club ID from the URL parameters
@@ -18,6 +19,7 @@ const ClubPage = ({ params }) => {
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedDescription, setEditedDescription] = useState('');
+    const router = useRouter();
 
     // Use Next.js authentication hook to get session data
     const { data: session, status } = useSession();
@@ -136,6 +138,11 @@ const ClubPage = ({ params }) => {
         setEditedDescription(club.description);
     };
 
+    // Function to handle redirection to announcement creation page
+    const handleCreateAnnouncementClick = () => {
+        router.push(`/club/${clubId}/announcement/create`);
+    }
+
     // Function to handle canceling the edit
     const handleCancelEdit = () => {
         setIsEditing(false);
@@ -240,6 +247,15 @@ const ClubPage = ({ params }) => {
                                 Edit Club
                             </button>
                         )}
+
+                        {(userRole === 'owner' || userRole === 'admin') && (
+                            <button
+                                onClick={handleCreateAnnouncementClick}
+                                className="bg-blue-500 hover:bg-blue-800 p-2 text-white font-bold rounded">    
+                                Create Announcement
+                            </button>
+                        )}
+
                         {/* Conditional rendering of Join Club button for non-members */}
                         {session && session.user.id !== club.owner._id && !isMember && (
                             <motion.button 
