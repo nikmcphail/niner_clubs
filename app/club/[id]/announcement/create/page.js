@@ -4,6 +4,7 @@ import React, {useRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { createAnnouncement } from '@/app/action/createAnnouncement';
+import { motion } from 'framer-motion';
 
 const AnnouncementCreation = ({ params }) => {
   const clubId = params.id;
@@ -107,7 +108,14 @@ const AnnouncementCreation = ({ params }) => {
               />
             </div>
 
-            <button className="uncc-form-button p-3 text-white font-bold">Create Announcement</button>
+            <motion.button 
+              className="uncc-form-button p-3 text-white font-bold"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              Create Announcement
+            </motion.button>
           </div>
         </form>
       )}
