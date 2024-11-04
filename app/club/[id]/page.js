@@ -207,6 +207,7 @@ const ClubPage = ({ params }) => {
                 <div className="form-background font-bold w-full max-w-md">
                     <div className="flex flex-col items-center px-5 py-5 space-y-5">
                         <h1 className="text-2xl font-bold">{club.name}</h1>
+
                         {/* Conditional rendering for editing mode */}
                         {isEditing ? (
                             <>
@@ -218,14 +219,31 @@ const ClubPage = ({ params }) => {
                                     placeholder="Describe your club"
                                 />
                                 <div className="flex space-x-2">
-                                    <button onClick={handleSaveEdit} className="uncc-form-button p-2 text-white font-bold">Save</button>
-                                    <button onClick={handleCancelEdit} className="bg-gray-500 p-2 text-white font-bold rounded">Cancel</button>
+                                    <motion.button 
+                                        onClick={handleSaveEdit} 
+                                        className="uncc-form-button p-2 text-white font-bold"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        Save
+                                    </motion.button>
+                                    <motion.button 
+                                        onClick={handleCancelEdit} 
+                                        className="bg-gray-500 p-2 text-white font-bold rounded"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        Cancel
+                                    </motion.button>
                                 </div>
                             </>
                         ) : (
                             // Display club description when not in editing mode
                             <p className="font-normal text-left"><span className="font-bold">Description:</span> {club.description}</p>
                         )}
+
                         {/* Display club owner information */}
                         <p className="text-left w-full">
                             <span className="font-bold">Owner:</span>{' '}
@@ -233,27 +251,37 @@ const ClubPage = ({ params }) => {
                                 {club.owner ? `${club.owner.firstname} ${club.owner.lastname}` : 'Unknown'}
                             </span>
                         </p>
+
                         {/* Display number of club members */}
                         <p className="text-left w-full">
                             <span className="font-bold">Members:</span>{' '}
                             <span className="font-normal">{club.members.length}</span>
                         </p>
-                        {/* Conditional rendering of Edit Club button for club owner */}
-                        {userRole === 'owner' && !isEditing && (
-                            <button 
+
+                         {/* Conditional rendering of Edit Club button for club owner */}
+                         {userRole === 'owner' && !isEditing && (
+                            <motion.button 
                                 onClick={handleEditClick}
                                 className="bg-blue-500 hover:bg-blue-800 p-2 text-white font-bold rounded"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                transition={{ duration: 0.2 }}
                             >
                                 Edit Club
-                            </button>
+                            </motion.button>
                         )}
 
+                         {/* Conditional rendering of Creatre Announcement button for club owners/admins */}
                         {(userRole === 'owner' || userRole === 'admin') && (
-                            <button
+                            <motion.button
                                 onClick={handleCreateAnnouncementClick}
-                                className="bg-blue-500 hover:bg-blue-800 p-2 text-white font-bold rounded">    
+                                className="bg-blue-500 hover:bg-blue-800 p-2 text-white font-bold rounded"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                transition={{ duration: 0.2 }}
+                            >    
                                 Create Announcement
-                            </button>
+                            </motion.button>
                         )}
 
                         {/* Conditional rendering of Join Club button for non-members */}
@@ -267,6 +295,7 @@ const ClubPage = ({ params }) => {
                             Join Club
                         </motion.button>
                     )}
+
                     {/* Conditional rendering of Leave Club button for members */}
                     {isMember && userRole !== 'owner' && (
                         <motion.button 
@@ -283,6 +312,7 @@ const ClubPage = ({ params }) => {
                         )}
                     </div>
                 </div>
+
                 {/* Animated notification component */}
                 <AnimatePresence>
                     {notification.visible && (
