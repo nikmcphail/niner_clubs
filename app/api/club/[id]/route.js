@@ -8,21 +8,30 @@ export async function GET(request, {params}) {
     try {
         const session = await getServerSession(authOptions);
         const clubId = params.id;
-        
+       
         await connectDB();
 
         if (!clubId) {
             return NextResponse.json({message: 'Club ID is required.'}, {status: 400});
         }
-        
+       
         const club = await Club.findById(clubId)
             .populate('owner', 'firstname lastname email')
-            .populate('members.userId', 'firstname lastname email');
+            .populate('members.userId', 'firstname lastname email')
+            .populate({
+                path: 'announcements',
+                options: { sort: { 'timestamp': -1 } }, // Sort by timestamp in descending order
+                limit: 1, // Get only the most recent announcement
+                populate: {
+                    path: 'creator',
+                    select: 'firstname lastname'
+                }
+            });
 
         if (!club) {
             return NextResponse.json({message: 'Club could not be found in database.'}, {status: 404});
         }
-        
+       
         let userRole = 'none';
         let isCurrentUserMember = false;
 
@@ -55,7 +64,8 @@ export async function GET(request, {params}) {
                 joinedAt: member.joinedAt
             })),
             userRole,
-            isCurrentUserMember
+            isCurrentUserMember,
+            latestAnnouncement: club.announcements[0] || null
         }, {status: 200});
 
     } catch (err) {
