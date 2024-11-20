@@ -5,6 +5,8 @@ import ScrollingBackground from '@/app/components/ScrollingBackground';
 import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
 
 const ClubPage = ({ params }) => {
     // Extract club ID from the URL parameters
@@ -19,6 +21,10 @@ const ClubPage = ({ params }) => {
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedDescription, setEditedDescription] = useState('');
+    const [allAnnouncements, setAllAnnouncements] = useState([]);
+    const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
+    const [latestAnnouncement, setLatestAnnouncement] = useState(null);
+    
     const router = useRouter();
 
     // Use Next.js authentication hook to get session data
@@ -45,10 +51,10 @@ const ClubPage = ({ params }) => {
             setClub(clubData);
             setUserRole(clubData.userRole);
             setIsMember(clubData.isCurrentUserMember);
+            setLatestAnnouncement(clubData.announcements[0] || null); // Set the latest announcement
         } catch (err) {
             console.error('Error fetching club info:', err);
             showNotification(err.message);
-            setClub(null);
         } finally {
             setLoading(false);
         }
@@ -61,6 +67,37 @@ const ClubPage = ({ params }) => {
         }
     }, [clubId, status]);
 
+    const fetchAllAnnouncements = async () => {
+        try {
+            const response = await fetch(`/api/club/${clubId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch all announcements');
+            }
+
+            const clubData = await response.json();
+            setAllAnnouncements(clubData.announcements);
+            setShowAllAnnouncements(true);
+        } catch (err) {
+            console.error('Error fetching all announcements:', err);
+            showNotification(err.message);
+        }
+    };
+
+    // Function to toggle announcements visibility
+    const toggleAnnouncements = () => {
+        if (!showAllAnnouncements) {
+            fetchAllAnnouncements();
+        } else {
+            setShowAllAnnouncements(false);
+        }
+    };
+
     // Function to display notifications
     const showNotification = (message) => {
         setNotification({ message, visible: true });
@@ -69,6 +106,7 @@ const ClubPage = ({ params }) => {
         }, 3000);
     };
 
+   
     // Function to handle joining a club
     const handleJoinClub = async () => {
         try {
@@ -327,10 +365,105 @@ const ClubPage = ({ params }) => {
                         </motion.div>
                     )}
                 </AnimatePresence>
+                
+                {/* Latest Announcement Section */}
+            <div className="form-background font-bold w-full max-w-md mt-8">
+                <div className="flex flex-col items-center px-5 py-5 space-y-5">
+                    <h2 className="text-xl font-bold">Latest Announcement</h2>
+                    {latestAnnouncement ? (
+                        <div className="w-full">
+                            <div className="border-b border-gray-300 pb-2 mb-4">
+                                <h3 className="text-lg font-semibold">{latestAnnouncement.title}</h3>
+                                <p className="text-sm">
+                                    By {latestAnnouncement.creator.firstname} {latestAnnouncement.creator.lastname}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                    {new Date(latestAnnouncement.timestamp).toLocaleDateString()}
+                                </p>
+                            </div>
+                            <p className="text-base font-normal mb-4">{latestAnnouncement.description}</p>
+                            <Link href={`/club/${clubId}/announcement/${latestAnnouncement._id}`}>
+                                <motion.button 
+                                    className="p-3 text-white font-bold rounded text-base shadow-md uncc-form-button"
+                                    whileHover={{ 
+                                        scale: 1.02,
+                                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.06)"
+                                    }}
+                                    whileTap={{ scale: 0.75 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    View Full Announcement
+                                </motion.button>
+                            </Link>
+                        </div>
+                    ) : (
+                        <p className="text-center text-gray-600">No announcements yet</p>
+                    )}
+                </div>
+            </div>
+
+            {/* Button to show all announcements */}
+            <motion.button 
+                className="p-3 text-white font-bold rounded text-base shadow-md uncc-form-button mt-4"
+                whileHover={{ 
+                    scale: 1.02,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.06)"
+                }}
+                whileTap={{ scale: 0.75 }}
+                transition={{ duration: 0.2 }}
+                onClick={toggleAnnouncements}
+            >
+                {showAllAnnouncements ? 'Close All Announcements' : 'View All Announcements'}
+            </motion.button>
+
+            {/* All Announcements Section */}
+            {showAllAnnouncements && (
+                <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="form-background font-bold w-full max-w-md mt-8 overflow-hidden"
+                >
+                    <div className="flex flex-col items-center px-5 py-5 space-y-5">
+                        <h2 className="text-xl font-bold">All Announcements</h2>
+                        {allAnnouncements.length > 0 ? (
+                            allAnnouncements.map(announcement => (
+                                <div key={announcement._id} className="w-full mb-4">
+                                    <div className="border-b border-gray-300 pb-2 mb-4">
+                                        <h3 className="text-lg font-semibold">{announcement.title}</h3>
+                                        <p className="text-sm">
+                                            By {announcement.creator.firstname} {announcement.creator.lastname}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                            {new Date(announcement.timestamp).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <p className="text-base font-normal mb-4">{announcement.description}</p>
+                                    <Link href={`/club/${clubId}/announcement/${announcement._id}`}>
+                                        <motion.button 
+                                            className="p-3 text-white font-bold rounded text-base shadow-md uncc-form-button"
+                                            whileHover={{ 
+                                                scale: 1.02,
+                                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.06)"
+                                            }}
+                                            whileTap={{ scale: 0.75 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            View Full Announcement
+                                        </motion.button>
+                                    </Link>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-600">No announcements found.</p>
+                        )}
+                    </div>
+                </motion.div>
+            )}
             </div>
         </>
     );
 }
 
 export default ClubPage;
-

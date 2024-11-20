@@ -55,6 +55,12 @@ export default function Register() {
             <input type="text" placeholder="John" id="firstname" name="firstname" className="form-input" required/>
             {errors.firstname && <div className="text-red-500">{errors.firstname}</div>}
           </div>
+          
+          <div className="flex flex-col">
+            <label htmlFor="username">Username</label>
+            <input type="text" placeholder="johndoe123" id="username" name="username" className="form-input" required/>
+            {errors.username && <div className="text-red-500">{errors.username}</div>}
+          </div>
 
           <div className="flex flex-col">
             <label htmlFor="lastname">Last Name</label>
@@ -76,6 +82,7 @@ export default function Register() {
 
           <button className="uncc-form-button p-3 text-white font-bold">Sign Up</button>
         </div>
+        
       </form>
       <div className="pt-4">
         <Link href='/user/login'>Already have an account?</Link>
