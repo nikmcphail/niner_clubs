@@ -4,24 +4,23 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/lib/auth";
 
-export async function GET(request, {params}) {
+export async function GET(request, { params }) {
     try {
         const session = await getServerSession(authOptions);
         const clubId = params.id;
-       
+
         await connectDB();
 
         if (!clubId) {
-            return NextResponse.json({message: 'Club ID is required.'}, {status: 400});
+            return NextResponse.json({ message: 'Club ID is required.' }, { status: 400 });
         }
-       
+
         const club = await Club.findById(clubId)
             .populate('owner', 'firstname lastname email')
             .populate('members.userId', 'firstname lastname email')
             .populate({
                 path: 'announcements',
                 options: { sort: { 'timestamp': -1 } }, // Sort by timestamp in descending order
-                limit: 1, // Get only the most recent announcement
                 populate: {
                     path: 'creator',
                     select: 'firstname lastname'
@@ -29,9 +28,9 @@ export async function GET(request, {params}) {
             });
 
         if (!club) {
-            return NextResponse.json({message: 'Club could not be found in database.'}, {status: 404});
+            return NextResponse.json({ message: 'Club could not be found in database.' }, { status: 404 });
         }
-       
+
         let userRole = 'none';
         let isCurrentUserMember = false;
 
@@ -63,13 +62,22 @@ export async function GET(request, {params}) {
                 email: member.userId.email,
                 joinedAt: member.joinedAt
             })),
+            announcements: club.announcements.map(announcement => ({
+                _id: announcement._id,
+                title: announcement.title,
+                description: announcement.description,
+                creator: {
+                    firstname: announcement.creator.firstname,
+                    lastname: announcement.creator.lastname
+                },
+                timestamp: announcement.timestamp
+            })),
             userRole,
-            isCurrentUserMember,
-            latestAnnouncement: club.announcements[0] || null
-        }, {status: 200});
-
-    } catch (err) {
-        console.error('There was an unexpected error', err);
-        return NextResponse.json({message: 'There was an unexpected error.'}, {status: 500});
+            isCurrentUserMember
+        });
+    } catch (error) {
+        console.error('Error fetching club info:', error);
+        return NextResponse.json({ message: 'An error occurred while fetching club info', error: error.message }, { status: 500 });
     }
 }
+
