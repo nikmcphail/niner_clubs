@@ -21,7 +21,10 @@ const ClubPage = ({ params }) => {
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedDescription, setEditedDescription] = useState('');
+    const [allAnnouncements, setAllAnnouncements] = useState([]);
+    const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
     const [latestAnnouncement, setLatestAnnouncement] = useState(null);
+   
     const router = useRouter();
 
     // Use Next.js authentication hook to get session data
@@ -48,11 +51,10 @@ const ClubPage = ({ params }) => {
             setClub(clubData);
             setUserRole(clubData.userRole);
             setIsMember(clubData.isCurrentUserMember);
-            setLatestAnnouncement(clubData.latestAnnouncement);
+            setLatestAnnouncement(clubData.announcements[0] || null); // Set the latest announcement
         } catch (err) {
             console.error('Error fetching club info:', err);
             showNotification(err.message);
-            setClub(null);
         } finally {
             setLoading(false);
         }
@@ -64,6 +66,37 @@ const ClubPage = ({ params }) => {
             fetchClubInfo();
         }
     }, [clubId, status]);
+
+    const fetchAllAnnouncements = async () => {
+        try {
+            const response = await fetch(`/api/club/${clubId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch all announcements');
+            }
+
+            const clubData = await response.json();
+            setAllAnnouncements(clubData.announcements);
+            setShowAllAnnouncements(true);
+        } catch (err) {
+            console.error('Error fetching all announcements:', err);
+            showNotification(err.message);
+        }
+    };
+
+    // Function to toggle announcements visibility
+    const toggleAnnouncements = () => {
+        if (!showAllAnnouncements) {
+            fetchAllAnnouncements();
+        } else {
+            setShowAllAnnouncements(false);
+        }
+    };
 
     // Function to display notifications
     const showNotification = (message) => {
@@ -165,19 +198,19 @@ const ClubPage = ({ params }) => {
                 },
                 body: JSON.stringify({ description: editedDescription }),
             });
-    
+   
             if (!response.ok) {
                 throw new Error('Failed to update club description');
             }
-    
+   
             const updatedClubData = await response.json();
-            
+           
             // Update only the description in the existing club state
             setClub(prevClub => ({
                 ...prevClub,
                 description: updatedClubData.club.description
             }));
-            
+           
             setIsEditing(false);
             showNotification('Club description updated successfully!');
         } catch (error) {
@@ -224,8 +257,8 @@ const ClubPage = ({ params }) => {
                                     placeholder="Describe your club"
                                 />
                                 <div className="flex space-x-2">
-                                    <motion.button 
-                                        onClick={handleSaveEdit} 
+                                    <motion.button
+                                        onClick={handleSaveEdit}
                                         className="uncc-form-button p-2 text-white font-bold"
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
@@ -233,8 +266,8 @@ const ClubPage = ({ params }) => {
                                     >
                                         Save
                                     </motion.button>
-                                    <motion.button 
-                                        onClick={handleCancelEdit} 
+                                    <motion.button
+                                        onClick={handleCancelEdit}
                                         className="bg-gray-500 p-2 text-white font-bold rounded"
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
@@ -265,7 +298,7 @@ const ClubPage = ({ params }) => {
 
                          {/* Conditional rendering of Edit Club button for club owner */}
                          {userRole === 'owner' && !isEditing && (
-                            <motion.button 
+                            <motion.button
                                 onClick={handleEditClick}
                                 className="bg-blue-500 hover:bg-blue-800 p-2 text-white font-bold rounded"
                                 whileHover={{ scale: 1.05 }}
@@ -291,7 +324,7 @@ const ClubPage = ({ params }) => {
 
                         {/* Conditional rendering of Join Club button for non-members */}
                         {session && session.user.id !== club.owner._id && !isMember && (
-                            <motion.button 
+                            <motion.button
                             onClick={handleJoinClub}
                             className="uncc-form-button p-3 text-white font-bold"
                             whileHover={{scale: 1.03}}
@@ -303,7 +336,7 @@ const ClubPage = ({ params }) => {
 
                     {/* Conditional rendering of Leave Club button for members */}
                     {isMember && userRole !== 'owner' && (
-                        <motion.button 
+                        <motion.button
                             onClick={handleLeaveClub}
                             className="bg-red-500 hover:bg-red-700 focus:bg-red-900 p-3 text-white font-bold rounded text-base shadow-lg shadow-lg"
                             whileHover={{
@@ -332,9 +365,9 @@ const ClubPage = ({ params }) => {
                         </motion.div>
                     )}
                 </AnimatePresence>
-                
+               
                 {/* Latest Announcement Section */}
-                <div className="form-background font-bold w-full max-w-md mt-8">
+            <div className="form-background font-bold w-full max-w-md mt-8">
                 <div className="flex flex-col items-center px-5 py-5 space-y-5">
                     <h2 className="text-xl font-bold">Latest Announcement</h2>
                     {latestAnnouncement ? (
@@ -350,9 +383,9 @@ const ClubPage = ({ params }) => {
                             </div>
                             <p className="text-base font-normal mb-4">{latestAnnouncement.description}</p>
                             <Link href={`/club/${clubId}/announcement/${latestAnnouncement._id}`}>
-                                <motion.button 
+                                <motion.button
                                     className="p-3 text-white font-bold rounded text-base shadow-md uncc-form-button"
-                                    whileHover={{ 
+                                    whileHover={{
                                         scale: 1.02,
                                         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.06)"
                                     }}
@@ -368,9 +401,69 @@ const ClubPage = ({ params }) => {
                     )}
                 </div>
             </div>
-        </div>
-    </>
-);
+
+            {/* Button to show all announcements */}
+            <motion.button
+                className="p-3 text-white font-bold rounded text-base shadow-md uncc-form-button mt-4"
+                whileHover={{
+                    scale: 1.02,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.06)"
+                }}
+                whileTap={{ scale: 0.75 }}
+                transition={{ duration: 0.2 }}
+                onClick={toggleAnnouncements}
+            >
+                {showAllAnnouncements ? 'Close All Announcements' : 'View All Announcements'}
+            </motion.button>
+
+            {/* All Announcements Section */}
+            {showAllAnnouncements && (
+                <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="form-background font-bold w-full max-w-md mt-8 overflow-hidden"
+                >
+                    <div className="flex flex-col items-center px-5 py-5 space-y-5">
+                        <h2 className="text-xl font-bold">All Announcements</h2>
+                        {allAnnouncements.length > 0 ? (
+                            allAnnouncements.map(announcement => (
+                                <div key={announcement._id} className="w-full mb-4">
+                                    <div className="border-b border-gray-300 pb-2 mb-4">
+                                        <h3 className="text-lg font-semibold">{announcement.title}</h3>
+                                        <p className="text-sm">
+                                            By {announcement.creator.firstname} {announcement.creator.lastname}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                            {new Date(announcement.timestamp).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <p className="text-base font-normal mb-4">{announcement.description}</p>
+                                    <Link href={`/club/${clubId}/announcement/${announcement._id}`}>
+                                        <motion.button
+                                            className="p-3 text-white font-bold rounded text-base shadow-md uncc-form-button"
+                                            whileHover={{
+                                                scale: 1.02,
+                                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.06)"
+                                            }}
+                                            whileTap={{ scale: 0.75 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            View Full Announcement
+                                        </motion.button>
+                                    </Link>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-600">No announcements found.</p>
+                        )}
+                    </div>
+                </motion.div>
+            )}
+            </div>
+        </>
+    );
 }
 
 export default ClubPage;
